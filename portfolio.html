@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lucas Loponte — Desenvolvedor Full-Stack & Automação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-elev: #111111;
+    --bg-card: #0f0f0f;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.16);
+    --fg: #ededed;
+    --fg-dim: #a1a1a1;
+    --fg-mute: #6b6b6b;
+    --accent: #10b981;
+    --accent-soft: rgba(16,185,129,0.12);
+    --accent-glow: rgba(16,185,129,0.35);
+  }
+
+  [data-theme="light"] {
+    --bg: #fafafa;
+    --bg-elev: #ffffff;
+    --bg-card: #ffffff;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.18);
+    --fg: #0a0a0a;
+    --fg-dim: #525252;
+    --fg-mute: #8a8a8a;
+    --accent: #059669;
+    --accent-soft: rgba(5,150,105,0.10);
+    --accent-glow: rgba(5,150,105,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  .mono { font-family: 'Geist Mono', ui-monospace, monospace; }
+
+  /* ------------ NAV ------------ */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: color-mix(in srgb, var(--bg) 60%, transparent);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+  .nav.scrolled { border-bottom-color: var(--border); }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+  .nav-link {
+    color: var(--fg-dim);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.2s ease;
+  }
+  .nav-link:hover { color: var(--fg); }
+  .nav-cta {
+    padding: 8px 16px;
+    background: var(--fg);
+    color: var(--bg);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .nav-cta:hover { opacity: 0.85; transform: scale(0.97); }
+
+  .lang-toggle {
+    display: inline-flex;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'Geist Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+  .lang-toggle button {
+    border: none;
+    background: transparent;
+    color: var(--fg-mute);
+    padding: 4px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  .lang-toggle button.active {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .theme-toggle-btn {
+    width: 32px; height: 32px;
+    border: 1px solid var(--border);
+    background: var(--bg-elev);
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fg-dim);
+    transition: all 0.2s ease;
+  }
+  .theme-toggle-btn:hover { color: var(--fg); border-color: var(--border-strong); }
+
+  /* ------------ GLOBAL BACKGROUND ------------ */
+  .site-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .site-bg-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+  }
+  .site-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.18;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+  }
+  .site-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 0%, transparent 0%, transparent 40%, color-mix(in srgb, var(--bg) 70%, transparent) 95%),
+      linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--bg) 50%, transparent) 100%);
+  }
+  /* ensure all sections sit above the bg */
+  .site-nav, main, footer { position: relative; z-index: 2; }
+
+  /* ------------ HERO ------------ */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero-canvas { display: none; }
+  .hero-overlay { display: none; }
+  .hero-grid { display: none; }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 120px 40px 80px;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--fg-dim);
+    margin-bottom: 32px;
+    letter-spacing: 0.02em;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--accent-glow); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 6px transparent; }
+  }
+
+  .hero-devname {
+    font-family: 'Geist Mono', monospace;
+    font-size: clamp(14px, 1.4vw, 18px);
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    margin-bottom: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-shadow: 0 0 24px var(--accent-glow);
+  }
+  .hero-devname::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+
+  h1.hero-title {
+    font-size: clamp(48px, 8vw, 104px);
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    margin-bottom: 28px;
+    max-width: 1000px;
+  }
+  .hero-title .accent {
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .hero-title .dim { color: var(--fg-mute); }
+
+  .hero-sub {
+    font-size: clamp(16px, 1.5vw, 19px);
+    color: var(--fg-dim);
+    max-width: 580px;
+    margin-bottom: 48px;
+    line-height: 1.55;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 64px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--fg);
+    color: var(--bg);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px color-mix(in srgb, var(--fg) 25%, transparent); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--fg);
+    border-color: var(--border-strong);
+  }
+  .btn-ghost:hover { background: var(--bg-elev); }
+  .btn .arrow { transition: transform 0.2s ease; }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  .hero-meta {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    max-width: 720px;
+  }
+  .hero-meta-item .label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .hero-meta-item .value {
+    font-size: 14px;
+    color: var(--fg);
+    font-weight: 500;
+  }
+  .hero-meta-item .value .live-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 6px;
+    animation: pulse 2s ease-in-out infinite;
+    vertical-align: middle;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-mute);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .scroll-hint::after {
+    content: '';
+    width: 1px;
+    height: 24px;
+    background: linear-gradient(to bottom, var(--fg-mute), transparent);
+    animation: scroll-line 2s ease-in-out infinite;
+  }
+  @keyframes scroll-line {
+    0%, 100% { transform: scaleY(0.4); transform-origin: top; }
+    50% { transform: scaleY(1); }
+  }
+
+  /* ------------ SECTION ------------ */
+  section { position: relative; }
+  .section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 120px 40px;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 32px;
+  }
+  .section-label::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--fg-mute);
+  }
+
+  .section-heading {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    max-width: 800px;
+    margin-bottom: 24px;
+  }
+  .section-heading .dim { color: var(--fg-mute); }
+  .section-heading .accent { color: var(--accent); font-style: italic; font-weight: 400; }
+
+  /* ------------ ABOUT ------------ */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 64px;
+    margin-top: 24px;
+  }
+  @media (min-width: 900px) {
+    .about-grid { grid-template-columns: 1fr 1.4fr; gap: 80px; }
+  }
+
+  .about-portrait {
+    position: sticky;
+    top: 60px;
+    margin-top: -32px;
+    align-self: start;
+  }
+  .portrait-frame {
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elev);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 120px var(--accent-glow);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .portrait-frame::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--accent), transparent 25%, transparent 75%, var(--accent));
+    z-index: -1;
+    animation: rotate-border 8s linear infinite;
+    filter: blur(2px);
+    opacity: 0.7;
+  }
+  @keyframes rotate-border { to { transform: rotate(360deg); } }
+  .portrait-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    transform: scale(1.05);
+    display: block;
+    transition: transform 0.7s cubic-bezier(0.23,1,0.32,1);
+  }
+  .portrait-frame:hover img { transform: scale(1.12); }
+  .portrait-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(180deg, transparent 50%, color-mix(in srgb, var(--bg) 70%, transparent) 100%);
+    pointer-events: none;
+  }
+  .portrait-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto 24px auto;
+    width: fit-content;
+    font-family: 'Geist Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    color: var(--fg);
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    padding: 8px 18px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 30px var(--accent-glow);
+  }
+  .portrait-name::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+  .about-portrait { position: relative; }
+  .portrait-tag {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .about-body p {
+    font-size: 18px;
+    color: var(--fg-dim);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .about-body p:first-of-type {
+    font-size: 22px;
+    color: var(--fg);
+    line-height: 1.5;
+    margin-bottom: 28px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .about-body strong {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 48px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .about-stat {
+    background: var(--bg-card);
+    padding: 24px 20px;
+  }
+  .about-stat .num {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .about-stat .num .accent { color: var(--accent); }
+  .about-stat .lbl {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ------------ STACK ------------ */
+  .stack {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 16px;
+  }
+  .stack-item {
+    background: var(--bg-card);
+    padding: 28px 24px;
+    transition: background 0.3s ease;
+    cursor: default;
+  }
+  .stack-item:hover { background: var(--bg-elev); }
+  .stack-item .icon {
+    width: 36px; height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 18px;
+    color: var(--accent);
+  }
+  .stack-item h4 {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .stack-item p {
+    font-size: 13px;
+    color: var(--fg-dim);
+    line-height: 1.5;
+  }
+  .stack-item .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .stack-item .tag {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-dim);
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+
+  /* ------------ PROJECTS ------------ */
+  .projects-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+  .projects-filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .filter {
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--fg-dim);
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s ease;
+  }
+  .filter:hover { color: var(--fg); border-color: var(--border-strong); }
+  .filter.active {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 700px) {
+    .projects-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1100px) {
+    .projects-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .project {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .project:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-4px);
+  }
+  .project-thumb {
+    aspect-ratio: 16 / 10;
+    position: relative;
+    background: var(--bg-elev);
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .project-thumb-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 14px,
+      var(--border) 14px,
+      var(--border) 15px
+    );
+    opacity: 0.5;
+  }
+  .project-thumb-glyph {
+    position: relative;
+    z-index: 1;
+    font-family: 'Geist Mono', monospace;
+    font-size: 64px;
+    font-weight: 300;
+    color: var(--fg-mute);
+    letter-spacing: -0.05em;
+    line-height: 1;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  .project:hover .project-thumb-glyph { color: var(--accent); transform: scale(1.05); }
+  .project-thumb-tag {
+    position: absolute;
+    top: 14px; left: 14px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-mute);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    border-radius: 999px;
+    z-index: 2;
+  }
+  .project-thumb-status {
+    position: absolute;
+    top: 14px; right: 14px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--fg-dim);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .project-thumb-status .d {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .project-thumb-status.archived .d { background: var(--fg-mute); }
+
+  .project-body {
+    padding: 22px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .project-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .project-title {
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    color: var(--fg);
+  }
+  .project-desc {
+    font-size: 14px;
+    color: var(--fg-dim);
+    line-height: 1.5;
+  }
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 4px;
+  }
+  .project-stack span {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-dim);
+    padding: 2px 7px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+  .project-cta {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--fg);
+    font-weight: 500;
+  }
+  .project-cta .arrow {
+    transition: transform 0.2s ease;
+    color: var(--fg-dim);
+  }
+  .project:hover .project-cta .arrow { transform: translateX(4px); color: var(--accent); }
+
+  /* ------------ CONTACT ------------ */
+  .contact-card {
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background: var(--bg-card);
+    padding: 64px 48px;
+    margin-top: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .contact-inner { position: relative; z-index: 1; }
+  .contact-card h2 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 16px;
+    max-width: 720px;
+  }
+  .contact-card .lead {
+    font-size: 18px;
+    color: var(--fg-dim);
+    max-width: 540px;
+    margin-bottom: 40px;
+  }
+  .contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .contact-channels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .channel {
+    background: var(--bg-card);
+    padding: 18px 20px;
+    text-decoration: none;
+    color: var(--fg);
+    transition: background 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .channel:hover { background: var(--bg-elev); }
+  .channel .lbl {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .channel .val {
+    font-size: 15px;
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  /* ------------ FOOTER ------------ */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  footer .live-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.23,1,0.32,1);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 700px) {
+    .nav { padding: 14px 20px; }
+    .nav-links { gap: 14px; }
+    .nav-link.hide-mobile { display: none; }
+    .section { padding: 80px 20px; }
+    .hero-inner { padding: 100px 20px 60px; }
+    .hero-meta { gap: 24px; }
+    .contact-card { padding: 40px 24px; }
+  }
+</style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    /* ============================
+       I18N
+       ============================ */
+    const dict = {
+      pt: {
+        nav: { about: 'Sobre', stack: 'Stack', projects: 'Projetos', contact: 'Contato', cta: 'Falar comigo' },
+        hero: {
+          eyebrow: 'Disponível para novos projetos',
+          title_1: 'Construindo',
+          title_2: 'sistemas',
+          title_3: 'que ',
+          title_accent: 'resolvem',
+          title_4: ' problemas reais.',
+          sub: 'Desenvolvedor Full-Stack & Especialista em Automação. Transformo ideias em soluções eficientes — do frontend ao backend, com foco em performance, escala e IA.',
+          primary: 'Ver projetos',
+          secondary: 'Sobre mim',
+          meta: {
+            role: 'Função',
+            role_v: 'Full-Stack & Automação',
+            location: 'Localização',
+            location_v: 'Rio de Janeiro, BR',
+            status: 'Status',
+            status_v: 'Aceitando projetos',
+          },
+          scroll: 'Scroll',
+        },
+        about: {
+          label: 'Sobre',
+          heading_1: 'Engenharia que ',
+          heading_accent: 'reduz custos',
+          heading_2: ' e ',
+          heading_accent_2: 'gera escala',
+          heading_3: '.',
+          lead: 'Sou Lucas Loponte. Desenvolvo soluções digitais completas, do frontend ao backend, com foco em performance, escalabilidade e experiência do usuário.',
+          p1: 'Tenho forte atuação em automação de processos, desenvolvendo sistemas inteligentes que otimizam tarefas, reduzem custos e aumentam a produtividade. Trabalho integrando IA, APIs e workflows para que negócios deixem de depender de processos manuais.',
+          p2: 'Meu objetivo é transformar ideias em soluções eficientes e inovadoras, usando tecnologia de forma estratégica para gerar resultados reais — não dashboards bonitos sem impacto.',
+          stats: [
+            { num: '+50', lbl: 'Projetos entregues' },
+            { num: '5+', lbl: 'Anos de experiência' },
+            { num: '24/7', lbl: 'Suporte dedicado' },
+          ],
+          tag_left: 'LL — 001',
+          tag_right: 'Rio · BR',
+        },
+        stack: {
+          label: 'Stack',
+          heading_1: 'Ferramentas que uso para ',
+          heading_accent: 'construir, automatizar e escalar',
+          heading_2: '.',
+          items: [
+            { title: 'Full-Stack', desc: 'Aplicações end-to-end com arquitetura limpa e foco em manutenibilidade.', tags: ['React', 'Node.js', 'TypeScript', 'PostgreSQL'] },
+            { title: 'Java', desc: 'Sistemas robustos com Spring Boot, microsserviços e integrações empresariais.', tags: ['Spring Boot', 'JPA', 'JUnit'] },
+            { title: 'Python', desc: 'Backend, scripts e pipelines de dados — quando velocidade de iteração importa.', tags: ['FastAPI', 'Pandas', 'Django'] },
+            { title: 'Automação & IA', desc: 'Workflows, integrações e modelos LLM aplicados para resolver tarefas repetitivas.', tags: ['n8n', 'LangChain', 'OpenAI', 'Selenium'] },
+          ],
+        },
+        projects: {
+          label: 'Projetos selecionados',
+          heading_1: 'Trabalhos recentes em ',
+          heading_accent: 'produção',
+          heading_2: '.',
+          all: 'Todos',
+          filters: { all: 'Todos', web: 'Web', auto: 'Automação', ai: 'IA', system: 'Sistemas' },
+          live: 'Live',
+          archived: 'Arquivado',
+          view: 'Ver case',
+          items: [
+            { idx: '01', glyph: 'Aa', tag: 'Web · 2025', title: 'Plataforma para escritórios de advocacia', desc: 'Site institucional + portal do cliente com agendamento, contratos via IA e CRM jurídico integrado.', stack: ['React', 'Node', 'Postgres', 'OpenAI'], status: 'live', cat: 'web' },
+            { idx: '02', glyph: '⌘', tag: 'Automação · 2025', title: 'Workflow de logística B2B', desc: 'Sistema de cotação automática, rastreamento e otimização de rotas para indústria madeireira.', stack: ['Python', 'FastAPI', 'n8n'], status: 'live', cat: 'auto' },
+            { idx: '03', glyph: '◐', tag: 'IA · 2025', title: 'Assistente jurídico com LLM', desc: 'Chat com IA treinada em contratos para responder dúvidas, gerar minutas e revisar documentos.', stack: ['LangChain', 'Python', 'Vector DB'], status: 'live', cat: 'ai' },
+            { idx: '04', glyph: '◢◣', tag: 'Sistema · 2024', title: 'Gestão clínica integrada', desc: 'ERP para clínicas com prontuário, fila digital, financeiro e integração com TISS.', stack: ['Java', 'Spring', 'React'], status: 'live', cat: 'system' },
+            { idx: '05', glyph: '~/', tag: 'Web · 2024', title: 'Catálogo industrial interativo', desc: 'Vitrine digital B2B com cotação por m³, sincronização de estoque e emissão automática de NF.', stack: ['Next.js', 'Postgres'], status: 'live', cat: 'web' },
+            { idx: '06', glyph: '01', tag: 'IA · 2024', title: 'Triagem automática de leads', desc: 'Pipeline que classifica e qualifica leads via LLM antes de chegarem ao time de vendas.', stack: ['Python', 'OpenAI', 'Postgres'], status: 'archived', cat: 'ai' },
+          ],
+        },
+        contact: {
+          label: 'Contato',
+          heading_1: 'Vamos construir ',
+          heading_accent: 'algo que importa',
+          heading_2: '?',
+          lead: 'Aceito projetos selecionados. Conte o que você quer resolver — respondo em até 24h.',
+          primary: 'Enviar email',
+          secondary: 'WhatsApp',
+          channels: [
+            { lbl: 'Email', val: 'cztechnology.contato@gmail.com', href: 'mailto:cztechnology.contato@gmail.com' },
+            { lbl: 'WhatsApp', val: '+55 (21) 99111-9338', href: 'https://wa.me/5521991119338' },
+            { lbl: 'Localização', val: 'Rio de Janeiro · Brasil', href: '#' },
+          ],
+        },
+        footer: { left: '© 2026 Lucas Loponte', right: 'disponível para novos projetos' },
+      },
+      en: {
+        nav: { about: 'About', stack: 'Stack', projects: 'Projects', contact: 'Contact', cta: 'Get in touch' },
+        hero: {
+          eyebrow: 'Available for new projects',
+          title_1: 'Building',
+          title_2: 'systems',
+          title_3: 'that ',
+          title_accent: 'solve',
+          title_4: ' real problems.',
+          sub: 'Full-Stack Developer & Automation Specialist. I turn ideas into efficient solutions — frontend to backend, with focus on performance, scale and AI.',
+          primary: 'View projects',
+          secondary: 'About me',
+          meta: {
+            role: 'Role',
+            role_v: 'Full-Stack & Automation',
+            location: 'Location',
+            location_v: 'Rio de Janeiro, BR',
+            status: 'Status',
+            status_v: 'Accepting work',
+          },
+          scroll: 'Scroll',
+        },
+        about: {
+          label: 'About',
+          heading_1: 'Engineering that ',
+          heading_accent: 'cuts costs',
+          heading_2: ' and ',
+          heading_accent_2: 'drives scale',
+          heading_3: '.',
+          lead: "I'm Lucas Loponte. I build complete digital products, frontend to backend, with focus on performance, scalability and user experience.",
+          p1: 'I specialize in process automation — building intelligent systems that streamline tasks, reduce costs and increase productivity. I integrate AI, APIs and workflows so businesses stop relying on manual processes.',
+          p2: 'My goal is to turn ideas into efficient, innovative solutions, using technology strategically to generate real outcomes — not pretty dashboards without impact.',
+          stats: [
+            { num: '+50', lbl: 'Projects shipped' },
+            { num: '5+', lbl: 'Years of experience' },
+            { num: '24/7', lbl: 'Dedicated support' },
+          ],
+          tag_left: 'LL — 001',
+          tag_right: 'Rio · BR',
+        },
+        stack: {
+          label: 'Stack',
+          heading_1: 'The tools I use to ',
+          heading_accent: 'build, automate and scale',
+          heading_2: '.',
+          items: [
+            { title: 'Full-Stack', desc: 'End-to-end apps with clean architecture and focus on maintainability.', tags: ['React', 'Node.js', 'TypeScript', 'PostgreSQL'] },
+            { title: 'Java', desc: 'Robust systems with Spring Boot, microservices and enterprise integrations.', tags: ['Spring Boot', 'JPA', 'JUnit'] },
+            { title: 'Python', desc: 'Backend, scripts and data pipelines — when iteration speed matters.', tags: ['FastAPI', 'Pandas', 'Django'] },
+            { title: 'Automation & AI', desc: 'Workflows, integrations and applied LLMs to crush repetitive work.', tags: ['n8n', 'LangChain', 'OpenAI', 'Selenium'] },
+          ],
+        },
+        projects: {
+          label: 'Selected work',
+          heading_1: 'Recent shipping in ',
+          heading_accent: 'production',
+          heading_2: '.',
+          all: 'All',
+          filters: { all: 'All', web: 'Web', auto: 'Automation', ai: 'AI', system: 'Systems' },
+          live: 'Live',
+          archived: 'Archived',
+          view: 'View case',
+          items: [
+            { idx: '01', glyph: 'Aa', tag: 'Web · 2025', title: 'Law firm platform', desc: 'Institutional site + client portal with scheduling, AI-generated contracts and integrated legal CRM.', stack: ['React', 'Node', 'Postgres', 'OpenAI'], status: 'live', cat: 'web' },
+            { idx: '02', glyph: '⌘', tag: 'Automation · 2025', title: 'B2B logistics workflow', desc: 'Auto-quoting, fleet tracking and route optimization for the timber industry.', stack: ['Python', 'FastAPI', 'n8n'], status: 'live', cat: 'auto' },
+            { idx: '03', glyph: '◐', tag: 'AI · 2025', title: 'Legal LLM assistant', desc: 'Chat trained on contracts to answer questions, draft documents and review legal text.', stack: ['LangChain', 'Python', 'Vector DB'], status: 'live', cat: 'ai' },
+            { idx: '04', glyph: '◢◣', tag: 'System · 2024', title: 'Integrated clinic ERP', desc: 'Clinic ERP with EHR, digital queue, finance and Brazilian TISS integration.', stack: ['Java', 'Spring', 'React'], status: 'live', cat: 'system' },
+            { idx: '05', glyph: '~/', tag: 'Web · 2024', title: 'Industrial B2B catalog', desc: 'Digital storefront with per-volume quoting, live stock sync and automated invoicing.', stack: ['Next.js', 'Postgres'], status: 'live', cat: 'web' },
+            { idx: '06', glyph: '01', tag: 'AI · 2024', title: 'Automated lead triage', desc: 'Pipeline that classifies and qualifies leads via LLM before they reach the sales team.', stack: ['Python', 'OpenAI', 'Postgres'], status: 'archived', cat: 'ai' },
+          ],
+        },
+        contact: {
+          label: 'Contact',
+          heading_1: "Let's build ",
+          heading_accent: 'something that matters',
+          heading_2: '?',
+          lead: "I take on selected projects. Tell me what you want to solve — I reply within 24h.",
+          primary: 'Send email',
+          secondary: 'WhatsApp',
+          channels: [
+            { lbl: 'Email', val: 'cztechnology.contato@gmail.com', href: 'mailto:cztechnology.contato@gmail.com' },
+            { lbl: 'WhatsApp', val: '+55 (21) 99111-9338', href: 'https://wa.me/5521991119338' },
+            { lbl: 'Location', val: 'Rio de Janeiro · Brazil', href: '#' },
+          ],
+        },
+        footer: { left: '© 2026 Lucas Loponte', right: 'available for new projects' },
+      },
+    };
+
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "theme": "dark",
+      "lang": "pt"
+    }/*EDITMODE-END*/;
+
+    /* ============================
+       APP
+       ============================ */
+    function App() {
+      const [theme, setTheme] = useState(TWEAK_DEFAULTS.theme);
+      const [lang, setLang] = useState(TWEAK_DEFAULTS.lang);
+      const [scrolled, setScrolled] = useState(false);
+      const [filter, setFilter] = useState('all');
+      const [tweaksOpen, setTweaksOpen] = useState(false);
+
+      const t = dict[lang];
+
+      useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+      }, [theme]);
+
+      useEffect(() => {
+        document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+      }, [lang]);
+
+      useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+      }, []);
+
+      // reveal observer
+      useEffect(() => {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+        const observe = () => {
+          document.querySelectorAll('.reveal:not(.in)').forEach(el => io.observe(el));
+        };
+        observe();
+        // re-observe shortly after to catch DOM updates from filter changes
+        const t1 = setTimeout(observe, 50);
+        return () => { clearTimeout(t1); io.disconnect(); };
+      }, [lang, filter]);
+
+      // Tweaks panel protocol
+      useEffect(() => {
+        const onMsg = (e) => {
+          if (!e.data) return;
+          if (e.data.type === '__activate_edit_mode') setTweaksOpen(true);
+          if (e.data.type === '__deactivate_edit_mode') setTweaksOpen(false);
+        };
+        window.addEventListener('message', onMsg);
+        window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+        return () => window.removeEventListener('message', onMsg);
+      }, []);
+
+      const persist = (key, val) => {
+        window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: val } }, '*');
+      };
+
+      const setThemePersist = (v) => { setTheme(v); persist('theme', v); };
+      const setLangPersist = (v) => { setLang(v); persist('lang', v); };
+
+      const filteredProjects = useMemo(() => {
+        if (filter === 'all') return t.projects.items;
+        return t.projects.items.filter(p => p.cat === filter);
+      }, [filter, t]);
+
+      return (
+        <>
+          <SiteBackground />
+          <Nav t={t} lang={lang} setLang={setLangPersist} theme={theme} setTheme={setThemePersist} scrolled={scrolled} />
+          <Hero t={t} />
+          <About t={t} />
+          <Stack t={t} />
+          <Projects t={t} filter={filter} setFilter={setFilter} items={filteredProjects} />
+          <Contact t={t} />
+          <Footer t={t} />
+          {tweaksOpen && (
+            <TweaksPanel
+              theme={theme} setTheme={setThemePersist}
+              lang={lang} setLang={setLangPersist}
+              onClose={() => {
+                setTweaksOpen(false);
+                window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+              }}
+            />
+          )}
+        </>
+      );
+    }
+
+    /* ------------ NAV ------------ */
+    function Nav({ t, lang, setLang, theme, setTheme, scrolled }) {
+      return (
+        <nav className={'nav' + (scrolled ? ' scrolled' : '')}>
+          <a href="#" className="nav-brand" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <span className="nav-dot" />
+            <span>Lucas Loponte</span>
+            <span className="mono" style={{ color: 'var(--fg-mute)', fontSize: 12, marginLeft: 4 }}>/ Dev</span>
+          </a>
+          <div className="nav-links">
+            <a href="#about" className="nav-link hide-mobile">{t.nav.about}</a>
+            <a href="#stack" className="nav-link hide-mobile">{t.nav.stack}</a>
+            <a href="#projects" className="nav-link hide-mobile">{t.nav.projects}</a>
+            <a href="#contact" className="nav-link hide-mobile">{t.nav.contact}</a>
+            <div className="lang-toggle">
+              <button className={lang === 'pt' ? 'active' : ''} onClick={() => setLang('pt')}>PT</button>
+              <button className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
+            </div>
+            <button
+              className="theme-toggle-btn"
+              aria-label="Toggle theme"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              {theme === 'dark' ? (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+              )}
+            </button>
+            <a href="#contact" className="nav-cta">{t.nav.cta}</a>
+          </div>
+        </nav>
+      );
+    }
+
+    /* ------------ SITE BACKGROUND ------------ */
+    function SiteBackground() {
+      const canvasRef = React.useRef(null);
+
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let w, h, dpr;
+        let particles = [];
+        let orbs = [];
+        const mouse = { x: -9999, y: -9999, active: false };
+        let raf;
+
+        const resize = () => {
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          w = canvas.clientWidth;
+          h = canvas.clientHeight;
+          canvas.width = w * dpr;
+          canvas.height = h * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          init();
+        };
+
+        const rand = (a, b) => a + Math.random() * (b - a);
+
+        const init = () => {
+          particles = [];
+          const count = Math.min(160, Math.floor((w * h) / 11000));
+          for (let i = 0; i < count; i++) {
+            particles.push({
+              x: Math.random() * w,
+              y: Math.random() * h,
+              vx: rand(-0.3, 0.3),
+              vy: rand(-0.3, 0.3),
+              r: rand(0.6, 1.8),
+              base: rand(0.3, 0.85),
+              hue: Math.random() < 0.15 ? 'white' : 'green',
+            });
+          }
+          orbs = [];
+        };
+
+        const onMove = (e) => {
+          const rect = canvas.getBoundingClientRect();
+          mouse.x = e.clientX - rect.left;
+          mouse.y = e.clientY - rect.top;
+          mouse.active = true;
+        };
+        const onLeave = () => { mouse.active = false; mouse.x = -9999; mouse.y = -9999; };
+
+        const draw = (tms) => {
+          ctx.clearRect(0, 0, w, h);
+
+          // PARTICLES — drift around AND scale/brighten near mouse (magnifier effect)
+          for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
+
+            // gentle drift
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // tiny ambient noise so they don't go static
+            p.vx += (Math.random() - 0.5) * 0.02;
+            p.vy += (Math.random() - 0.5) * 0.02;
+
+            // soft speed cap
+            const sp = Math.hypot(p.vx, p.vy);
+            if (sp > 0.5) { p.vx = (p.vx / sp) * 0.5; p.vy = (p.vy / sp) * 0.5; }
+
+            // wrap edges
+            if (p.x < -20) p.x = w + 20;
+            if (p.x > w + 20) p.x = -20;
+            if (p.y < -20) p.y = h + 20;
+            if (p.y > h + 20) p.y = -20;
+
+            // proximity factor for magnifier effect
+            let factor = 0;
+            if (mouse.active) {
+              const dx = mouse.x - p.x, dy = mouse.y - p.y;
+              const d = Math.hypot(dx, dy);
+              if (d < 200) factor = 1 - d / 200;
+            }
+
+            const r = p.r * (1 + factor * 2.2);
+            const alpha = Math.min(1, p.base + factor * 0.6);
+
+            const color = p.hue === 'white'
+              ? `rgba(255,255,255,${alpha})`
+              : `rgba(16,185,129,${alpha})`;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // connect close particles — line strength scales near mouse
+            for (let j = i + 1; j < particles.length; j++) {
+              const q = particles[j];
+              const dx = p.x - q.x, dy = p.y - q.y;
+              const d2 = dx * dx + dy * dy;
+              if (d2 < 11000) {
+                let lineFactor = 0;
+                if (mouse.active) {
+                  const mx = (p.x + q.x) / 2 - mouse.x;
+                  const my = (p.y + q.y) / 2 - mouse.y;
+                  const md = Math.hypot(mx, my);
+                  if (md < 200) lineFactor = 1 - md / 200;
+                }
+                const a = (1 - d2 / 11000) * (0.12 + lineFactor * 0.55);
+                ctx.strokeStyle = `rgba(16,185,129,${a})`;
+                ctx.lineWidth = 0.5 + lineFactor * 1.2;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(q.x, q.y);
+                ctx.stroke();
+              }
+            }
+
+            // line from particle to mouse cursor when near
+            if (mouse.active) {
+              const dx = mouse.x - p.x, dy = mouse.y - p.y;
+              const d = Math.hypot(dx, dy);
+              if (d < 180) {
+                const a = (1 - d / 180) * 0.7;
+                ctx.strokeStyle = `rgba(16,185,129,${a})`;
+                ctx.lineWidth = 0.8 + (1 - d / 180) * 1.2;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(mouse.x, mouse.y);
+                ctx.stroke();
+              }
+            }
+          }
+
+          // mouse cursor node — draws a bright dot at the mouse
+          if (mouse.active) {
+            ctx.fillStyle = 'rgba(16,185,129,0.95)';
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(16,185,129,0.5)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(mouse.x, mouse.y, 8, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+
+          // soft mouse glow
+          if (mouse.active) {
+            const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 220);
+            g.addColorStop(0, 'rgba(16,185,129,0.16)');
+            g.addColorStop(1, 'rgba(16,185,129,0)');
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, w, h);
+          }
+
+          raf = requestAnimationFrame(draw);
+        };
+
+        resize();
+        window.addEventListener('resize', resize);
+        canvas.addEventListener('mousemove', onMove);
+        canvas.addEventListener('mouseleave', onLeave);
+        // also listen on window so it works through overlay layers
+        window.addEventListener('mousemove', onMove);
+        raf = requestAnimationFrame(draw);
+
+        return () => {
+          cancelAnimationFrame(raf);
+          window.removeEventListener('resize', resize);
+          canvas.removeEventListener('mousemove', onMove);
+          canvas.removeEventListener('mouseleave', onLeave);
+          window.removeEventListener('mousemove', onMove);
+        };
+      }, []);
+
+      return (
+        <div className="site-bg" aria-hidden="true">
+          <canvas ref={canvasRef} className="site-bg-canvas" />
+          <div className="site-bg-grid" />
+          <div className="site-bg-overlay" />
+        </div>
+      );
+    }
+
+    /* ------------ HERO ------------ */
+    function Hero({ t }) {
+      return (
+        <section className="hero" data-screen-label="01 Hero">
+          <div className="hero-inner">
+            <div className="hero-eyebrow reveal">{t.hero.eyebrow}</div>
+            <div className="hero-devname reveal">LoponteDev</div>
+            <h1 className="hero-title reveal">
+              {t.hero.title_1}{' '}
+              <span className="dim">{t.hero.title_2}</span>{' '}
+              <br />
+              {t.hero.title_3}
+              <span className="accent">{t.hero.title_accent}</span>
+              {t.hero.title_4}
+            </h1>
+            <p className="hero-sub reveal">{t.hero.sub}</p>
+            <div className="hero-actions reveal">
+              <a href="#projects" className="btn btn-primary">
+                {t.hero.primary}
+                <svg className="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+              <a href="#about" className="btn btn-ghost">{t.hero.secondary}</a>
+            </div>
+            <div className="hero-meta reveal">
+              <div className="hero-meta-item">
+                <div className="label">{t.hero.meta.role}</div>
+                <div className="value">{t.hero.meta.role_v}</div>
+              </div>
+              <div className="hero-meta-item">
+                <div className="label">{t.hero.meta.location}</div>
+                <div className="value">{t.hero.meta.location_v}</div>
+              </div>
+              <div className="hero-meta-item">
+                <div className="label">{t.hero.meta.status}</div>
+                <div className="value"><span className="live-dot" />{t.hero.meta.status_v}</div>
+              </div>
+            </div>
+          </div>
+          <div className="scroll-hint">{t.hero.scroll}</div>
+        </section>
+      );
+    }
+
+    /* ------------ ABOUT ------------ */
+    function About({ t }) {
+      return (
+        <section className="section" id="about" data-screen-label="02 About">
+          <div className="section-label reveal">{t.about.label}</div>
+          <h2 className="section-heading reveal">
+            {t.about.heading_1}<span className="accent">{t.about.heading_accent}</span>{t.about.heading_2}<span className="accent">{t.about.heading_accent_2}</span>{t.about.heading_3}
+          </h2>
+          <div className="about-grid">
+            <div className="about-portrait reveal">
+              <div className="portrait-name">LoponteDev</div>
+              <div className="portrait-frame">
+                <img src="assets/about.png?v=2" alt="Lucas Loponte" />
+              </div>
+              <div className="portrait-tag">
+                <span>{t.about.tag_left}</span>
+                <span>{t.about.tag_right}</span>
+              </div>
+            </div>
+            <div className="about-body reveal">
+              <p>{t.about.lead}</p>
+              <p>{t.about.p1}</p>
+              <p>{t.about.p2}</p>
+              <div className="about-stats">
+                {t.about.stats.map((s, i) => (
+                  <div key={i} className="about-stat">
+                    <div className="num">
+                      {s.num.includes('+') || s.num.includes('/') ? (
+                        <>{s.num.replace(/(\+|\/.+)/, '')}<span className="accent">{s.num.match(/(\+|\/.+)/)?.[0]}</span></>
+                      ) : s.num}
+                    </div>
+                    <div className="lbl">{s.lbl}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------ STACK ------------ */
+    function Stack({ t }) {
+      const icons = [
+        // full-stack — layers
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>,
+        // java — coffee
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>,
+        // python — terminal
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>,
+        // automation — zap
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>,
+      ];
+      return (
+        <section className="section" id="stack" data-screen-label="03 Stack">
+          <div className="section-label reveal">{t.stack.label}</div>
+          <h2 className="section-heading reveal">
+            {t.stack.heading_1}<span className="accent">{t.stack.heading_accent}</span>{t.stack.heading_2}
+          </h2>
+          <div className="stack reveal">
+            {t.stack.items.map((it, i) => (
+              <div key={i} className="stack-item">
+                <div className="icon">{icons[i]}</div>
+                <h4>{it.title}</h4>
+                <p>{it.desc}</p>
+                <div className="tags">
+                  {it.tags.map((tag, j) => <span key={j} className="tag">{tag}</span>)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------ PROJECTS ------------ */
+    function Projects({ t, filter, setFilter, items }) {
+      const cats = ['all', 'web', 'auto', 'ai', 'system'];
+      return (
+        <section className="section" id="projects" data-screen-label="04 Projects">
+          <div className="section-label reveal">{t.projects.label}</div>
+          <div className="projects-head">
+            <h2 className="section-heading reveal" style={{ marginBottom: 0 }}>
+              {t.projects.heading_1}<span className="accent">{t.projects.heading_accent}</span>{t.projects.heading_2}
+            </h2>
+            <div className="projects-filters reveal">
+              {cats.map(c => (
+                <button key={c} className={'filter ' + (filter === c ? 'active' : '')} onClick={() => setFilter(c)}>
+                  {t.projects.filters[c]}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="projects-grid">
+            {items.map((p, i) => (
+              <article key={p.idx + p.title} className="project reveal" style={{ transitionDelay: `${i * 0.05}s` }}>
+                <div className="project-thumb">
+                  <div className="project-thumb-pattern" />
+                  <div className="project-thumb-glyph">{p.glyph}</div>
+                  <span className="project-thumb-tag">{p.tag}</span>
+                  <span className={'project-thumb-status ' + (p.status === 'archived' ? 'archived' : '')}>
+                    <span className="d" />
+                    {p.status === 'live' ? t.projects.live : t.projects.archived}
+                  </span>
+                </div>
+                <div className="project-body">
+                  <div className="project-meta">
+                    <span>{p.idx} / {String(t.projects.items.length).padStart(2,'0')}</span>
+                    <span>{p.tag.split('·')[1]?.trim()}</span>
+                  </div>
+                  <h3 className="project-title">{p.title}</h3>
+                  <p className="project-desc">{p.desc}</p>
+                  <div className="project-stack">
+                    {p.stack.map((s, j) => <span key={j}>{s}</span>)}
+                  </div>
+                  <div className="project-cta">
+                    <span>{t.projects.view}</span>
+                    <svg className="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------ CONTACT ------------ */
+    function Contact({ t }) {
+      return (
+        <section className="section" id="contact" data-screen-label="05 Contact">
+          <div className="section-label reveal">{t.contact.label}</div>
+          <div className="contact-card reveal">
+            <div className="contact-inner">
+              <h2>
+                {t.contact.heading_1}<span className="accent" style={{ color: 'var(--accent)', fontStyle: 'italic', fontWeight: 400 }}>{t.contact.heading_accent}</span>{t.contact.heading_2}
+              </h2>
+              <p className="lead">{t.contact.lead}</p>
+              <div className="contact-actions">
+                <a href="mailto:cztechnology.contato@gmail.com" className="btn btn-primary">
+                  {t.contact.primary}
+                  <svg className="arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
+                <a href="https://wa.me/5521991119338" target="_blank" rel="noreferrer" className="btn btn-ghost">{t.contact.secondary}</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    /* ------------ FOOTER ------------ */
+    function Footer({ t }) {
+      return (
+        <footer>
+          <div>{t.footer.left}</div>
+          <div><span className="live-dot" />{t.footer.right}</div>
+        </footer>
+      );
+    }
+
+    /* ------------ TWEAKS PANEL ------------ */
+    function TweaksPanel({ theme, setTheme, lang, setLang, onClose }) {
+      return (
+        <div style={{
+          position: 'fixed',
+          bottom: 24, right: 24,
+          background: 'var(--bg-elev)',
+          border: '1px solid var(--border-strong)',
+          borderRadius: 16,
+          padding: 18,
+          width: 260,
+          zIndex: 200,
+          boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+          color: 'var(--fg)',
+          fontFamily: 'Geist, sans-serif',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em' }}>Tweaks</div>
+            <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--fg-dim)', cursor: 'pointer', fontSize: 16, lineHeight: 1 }}>✕</button>
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontFamily: 'Geist Mono, monospace', fontSize: 10, color: 'var(--fg-mute)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>Theme</div>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {['dark','light'].map(opt => (
+                <button key={opt} onClick={() => setTheme(opt)} style={{
+                  flex: 1,
+                  padding: '8px 12px',
+                  background: theme === opt ? 'var(--fg)' : 'transparent',
+                  color: theme === opt ? 'var(--bg)' : 'var(--fg-dim)',
+                  border: '1px solid ' + (theme === opt ? 'var(--fg)' : 'var(--border)'),
+                  borderRadius: 8,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  textTransform: 'capitalize',
+                  fontFamily: 'inherit',
+                }}>{opt}</button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div style={{ fontFamily: 'Geist Mono, monospace', fontSize: 10, color: 'var(--fg-mute)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 }}>Language</div>
+            <div style={{ display: 'flex', gap: 6 }}>
+              {['pt','en'].map(opt => (
+                <button key={opt} onClick={() => setLang(opt)} style={{
+                  flex: 1,
+                  padding: '8px 12px',
+                  background: lang === opt ? 'var(--fg)' : 'transparent',
+                  color: lang === opt ? 'var(--bg)' : 'var(--fg-dim)',
+                  border: '1px solid ' + (lang === opt ? 'var(--fg)' : 'var(--border)'),
+                  borderRadius: 8,
+                  fontSize: 12,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  textTransform: 'uppercase',
+                  fontFamily: 'inherit',
+                }}>{opt}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
