@@ -780,7 +780,7 @@
   .contact-card .lead {
     font-size: 18px;
     color: var(--fg-dim);
-    max-width: 540px;
+    max-width: 720px;
     margin-bottom: 40px;
   }
   .contact-actions {
