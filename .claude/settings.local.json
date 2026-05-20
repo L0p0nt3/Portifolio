@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npm run build 2>&1)",
+      "PowerShell(vercel --version 2>&1)",
+      "PowerShell(npx vercel --version 2>&1)",
+      "PowerShell(cmd /c dir /a .vercel)",
+      "PowerShell($content = Get-Content dist\\\\assets\\\\index-Ch2WUhaf.js -Raw; [regex]::Matches\\($content, 'mailto:[^\"'']+'\\) | ForEach-Object { $_.Value })"
+    ]
+  }
+}
