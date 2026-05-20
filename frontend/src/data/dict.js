@@ -1,4 +1,4 @@
-export const dict = {
+﻿export const dict = {
   pt: {
     nav: { about: 'Sobre', stack: 'Stack', projects: 'Projetos', contact: 'Contato', cta: 'Falar comigo' },
     hero: {
@@ -36,7 +36,7 @@ export const dict = {
         { num: '5+', lbl: 'Anos de experiência' },
         { num: '24/7', lbl: 'Suporte dedicado' },
       ],
-      tag_left: 'LL 001',
+      tag_left: '',
       tag_right: 'Rio · BR',
     },
     stack: {
@@ -127,7 +127,7 @@ export const dict = {
         { num: '5+', lbl: 'Years of experience' },
         { num: '24/7', lbl: 'Dedicated support' },
       ],
-      tag_left: 'LL 001',
+      tag_left: '',
       tag_right: 'Rio · BR',
     },
     stack: {
